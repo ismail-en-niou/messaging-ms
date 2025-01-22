@@ -13,7 +13,9 @@ app.use(bodyParser.json());
 let port = process.env.port || 5000;
 let url = process.env.ATLAS_URI;
 app.use(cors());
-app.use("/api/users", UserRoute);
+
+// version 1 
+app.use("/api/v1/users/", UserRoute);
 
 app.use(express.json());
 
@@ -30,13 +32,20 @@ app.post('/add', (req, res) => {
 
 // database connection
 mongoose.connect(url).then(() => {
-        console.log('MongoDB connected');
-    }).catch((err) => {     
-        console.log("Error: " + err);
-    });
+    console.log(`
+ ██████╗ ██████╗ ███╗   ██╗███╗   ██╗███████╗ ██████╗████████╗
+██╔════╝██╔═══██╗████╗  ██║████╗  ██║██╔════╝██╔════╝╚══██╔══╝
+██║     ██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██║        ██║   
+██║     ██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██║        ██║   
+╚██████╗╚██████╔╝██║ ╚████║██║ ╚████║███████╗╚██████╗   ██║   
+ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═╝ 
+            `);
+}).catch((err) => {
+    console.log("Error: " + err);
+});
 
 
 
-app.listen(port ,(req , res) => {
+app.listen(port, '0.0.0.0' ,(req, res) => {
     console.log(`Server is running on port ${port}`);
 });

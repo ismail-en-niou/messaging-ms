@@ -13,17 +13,17 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-transporter.verify((error, success) => {
-    if (error) {
-        console.error('Error connecting to the server:', error);
-    } else {
-        console.log('Server is ready to send emails');
-    }
-});
+// transporter.verify((error, success) => {
+//     if (error) {
+//         console.error('Error connecting to the server:', error);
+//     } else {
+//         console.log('Server is ready to send emails');
+//     }
+// });
 
 const sendVerificationEmail = async (email, code) => {
     console.log('Email:', process.env.EMAIL_USER);
-console.log('Password:', process.env.USER_PASS);
+    console.log('Password:', process.env.USER_PASS);
 
     const mailOptions = {
         from: process.env.EMAIL_USER,

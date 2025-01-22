@@ -26,6 +26,7 @@ const verificationCode = async (req, res) => {
         // Code is valid - proceed with the verification
         user.verificationCode = null; // Clear the code
         user.codeExpiresAt = null; // Clear the expiry time
+        user.verifiy = true; //set the verification 
         await user.save();
 
         res.status(200).json({ message: "Verification successful" });

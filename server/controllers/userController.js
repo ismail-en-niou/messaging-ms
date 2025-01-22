@@ -7,41 +7,22 @@ const validator = require('validator');
 const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-
-        // Validate required fields
-        if (!username || !email || !password) {
+        if (!username || !email || !password)
             return res.status(400).json({ msg: 'Please enter all fields' });
-        }
-
-        // Validate email format
-        if (!validator.isEmail(email)) {
+        if (!validator.isEmail(email))
             return res.status(400).json({ msg: 'Please enter a valid email' });
-        }
-
-        // Check if user already exists
         const existingUser = await userModel.findOne({ email });
-        if (existingUser) {
+        if (existingUser)
             return res.status(400).json({ msg: 'User already exists' });
-        }
-
-        // Hash password
         const salt = await bcrypt.genSalt(2);
         const hashedPassword = await bcrypt.hash(password, salt);
-
-        // Create new user
         const newUser = new userModel({
             username,
             email,
             password: hashedPassword,
         });
-
-        // Save user to database
         const savedUser = await newUser.save();
-
-        // Generate JWT
         const token = jwt.sign({ id: savedUser.id }, process.env.JWT_SECRET, { expiresIn: 3600 });
-
-        // Respond with token and user details
         res.json({
             token,
             user: {
@@ -51,10 +32,53 @@ const registerUser = async (req, res) => {
             },
         });
     } catch (err) {
-        console.error(err.message);
         res.status(500).json({ msg: 'Server error' });
     }
 };
 
 
-module.exports = { registerUser };
+const userLogin = async (req , res) =>
+{
+    const {email , pass } = req.body;
+    try {
+        // check if user is in data base or no 
+        const user = await userModel.findOne({ email });
+        if (!user)
+            return res.status(400).json({ msg: 'invalid email or password' });
+        if (!user.password) {
+            return res.status(400).json({ msg: 'Invalid email or password' });
+        }
+        const isValidpass = await bcrypt.compare(pass , user.password);
+        if (!isValidpass)
+            return res.status(400).json({ msg: 'invalid email or password' });
+        const token = jwt.sign({ id: user.id, name: user.name }, process.env.JWT_SECRET, { expiresIn: 3600 });
+        res.status(200).json({ msg: 'login sucssefly' , token : token  , _id : user._id , username : user.username});
+
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ msg: 'Server error' });
+    }
+}
+
+const findUser = async (req , res) =>{
+    const userid = req.params.userId ;
+    try {
+        const user = await userModel.findById(userid);
+        res.status(200).json(user);
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ msg: 'Server error' });
+    }
+}
+
+const getUsers = async (req , res)=>
+{
+    try {
+        const user = await userModel.find();
+        res.status(200).json(user);
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ msg: 'Server error' });
+    }
+}
+module.exports = { registerUser , userLogin , findUser , getUsers};
