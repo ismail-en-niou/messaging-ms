@@ -1,1 +1,12 @@
-?
+# Ignore node_modules folder inside the server directory
+server/node_modules/
+
+# Ignore .env file inside the server directory (for sensitive data)
+server/.env
+
+# You can also add other common ignores
+*.log
+dist/
+build/
+.DS_Store
+Thumbs.db
