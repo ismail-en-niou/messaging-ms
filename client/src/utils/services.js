@@ -1,0 +1,1 @@
+export const baseUrl = "https://studious-goldfish-9pwrwvp777x3qqq-4242.app.github.dev/api/v1/users/";

@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
+  useEffect(() => {
+    let user = Cookies.get('all');
+    let token = Cookies.get('token');
+    if (token || user) {
+      navigate('/home');
+    }
+  } , [])
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -109,6 +118,12 @@ export default function SignUp() {
             Sign Up
           </button>
         </form>
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            do you have accont  ?{' '}
+            <Link to="/" className="text-blue-500 hover:text-blue-600 font-medium">Login </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

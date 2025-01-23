@@ -11,15 +11,13 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4242/api/v1/users/login', {
+      const response = await axios.post('https://studious-goldfish-9pwrwvp777x3qqq-4242.app.github.dev/api/v1/users/login', {
         email: email,
         pass: password,
       });
 
-      console.log('Login successful:', response.data);
-      alert('Login successful!');
-      Cookies.set('token', response.data.token, { expires: 1 / 1440, path: '/', secure: true, sameSite: 'Strict' });
-      Cookies.set('all', JSON.stringify(response.data), { expires: 1 / 1440, path: '/', secure: true, sameSite: 'Strict' });
+      Cookies.set('token', response.data.token, { expires: 1439 / 1440, path: '/', secure: true, sameSite: 'Strict' });
+      Cookies.set('all', JSON.stringify(response.data), { expires: 1439 / 1440, path: '/', secure: true, sameSite: 'Strict' });
       window.location.href = '/home'; // Redirect to home page after login
 
     } catch (error) {
