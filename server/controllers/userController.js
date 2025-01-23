@@ -52,7 +52,7 @@ const userLogin = async (req , res) =>
         if (!isValidpass)
             return res.status(400).json({ msg: 'invalid email or password' });
         const token = jwt.sign({ id: user.id, name: user.name }, process.env.JWT_SECRET, { expiresIn: 3600 });
-        res.status(200).json({ msg: 'login sucssefly' , token : token  , _id : user._id , username : user.username});
+        res.status(200).json({ token : token  , _id : user._id , username : user.username});
 
     }catch(error){
         console.log(error);
