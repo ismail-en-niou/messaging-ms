@@ -27,29 +27,63 @@ export default function Home() {
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [selectedContact, setSelectedContact] = useState(null);
+
+  // List of contacts (example)
+  const contacts = [
+    { username: 'Alice', id: 1 },
+    { username: 'Bob', id: 2 },
+    { username: 'Charlie', id: 3 },
+    { username: 'David', id: 4 },
+  ];
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (newMessage.trim() === '') return;
+    if (newMessage.trim() === '' || !selectedContact) return;
     setMessages([...messages, { user: username || 'Guest', text: newMessage }]);
     setNewMessage('');
   };
 
-  return (
-    <div className="flex flex-col h-screen">
-      {/* Navbar */}
-      <Navbar />
+  const handleSelectContact = (contact) => {
+    setSelectedContact(contact);
+    setMessages([]); // Clear the message history when selecting a new contact
+  };
 
-      {/* Main Chat Area */}
-      <div className="flex-grow flex flex-col bg-gray-100">
+  return (
+    <div className="flex h-screen">
+      {/* Left Sidebar - Contacts */}
+      <div className="w-1/4 bg-gray-800 text-white p-4 overflow-y-auto">
+        <h2 className="text-xl font-bold mb-4">Contacts</h2>
+        <ul>
+          {contacts.map((contact) => (
+            <li
+              key={contact.id}
+              className={`py-2 px-4 cursor-pointer hover:bg-gray-700 rounded ${
+                selectedContact?.id === contact.id ? 'bg-blue-600' : ''
+              }`}
+              onClick={() => handleSelectContact(contact)}
+            >
+              {contact.username}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Right Panel - Chat Area */}
+      <div className="flex-grow bg-gray-100 flex flex-col">
+        <Navbar />
+
+        {/* Chat Header */}
         <header className="bg-blue-600 text-white p-4 text-center">
-          <h1 className="text-2xl font-bold">Welcome, {username || 'Guest'}!</h1>
+          <h1 className="text-2xl font-bold">
+            {selectedContact ? `Chat with ${selectedContact.username}` : 'Select a contact'}
+          </h1>
         </header>
 
-        <div className="flex-grow overflow-hidden flex flex-col justify-between">
-          {/* Messages Display */}
-          <div className="flex-grow overflow-y-auto p-4 bg-gray-50">
-            {messages.length > 0 ? (
+        {/* Messages Display */}
+        <div className="flex-grow overflow-y-auto p-4 bg-gray-50">
+          {selectedContact ? (
+            messages.length > 0 ? (
               messages.map((message, index) => (
                 <div key={index} className="mb-4">
                   <p className="font-semibold">{message.user}:</p>
@@ -60,10 +94,16 @@ export default function Home() {
               <p className="text-gray-500 text-center mt-10">
                 No messages yet. Start the conversation!
               </p>
-            )}
-          </div>
+            )
+          ) : (
+            <p className="text-gray-500 text-center mt-10">
+              Please select a contact to start chatting.
+            </p>
+          )}
+        </div>
 
-          {/* Message Input */}
+        {/* Message Input */}
+        {selectedContact && (
           <div className="bg-white p-4 border-t">
             <form
               onSubmit={handleSendMessage}
@@ -85,7 +125,7 @@ export default function Home() {
               </button>
             </form>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
