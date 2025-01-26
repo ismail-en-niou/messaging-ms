@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let chatChema = new Schema(
+// Corrected the typo: "chatChema" to "chatSchema"
+let chatSchema = new Schema(
     {
-        members : Array,
+        members: [String], // Specify the type of elements in the array for better clarity
     },
-    {timestamps : true}
+    { timestamps: true } // Ensure correct spacing and casing
 );
-const chatmodel = mongoose.model("chat" , chatChema);
-module.exports = chatmodel;
+
+const chatModel = mongoose.model("Chat", chatSchema); // Consistent casing for model name
+module.exports = chatModel;
