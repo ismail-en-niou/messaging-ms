@@ -5,9 +5,13 @@ import Cookies from 'js-cookie';
 
 export default function Home() {
   const navigate = useNavigate();
+  const token = Cookies.get('token');
+  const all = Cookies.get('all');
+  if (!token && !all) {
+    navigate('/');
+  }
 
   // Retrieve user and token from cookies
-  const all = Cookies.get('all');
   const username = all
     ? (() => {
         try {
@@ -18,12 +22,8 @@ export default function Home() {
       })()
     : null;
 
-  const token = Cookies.get('token');
 
   // Redirect to login if not authenticated
-  if (!token || !all) {
-    navigate('/');
-  }
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');

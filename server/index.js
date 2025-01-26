@@ -1,38 +1,35 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 require('dotenv').config();
 
+// Declaration of routers
 const UserRoute = require('./routers/userRoute');
-
+const chatRoute = require('./routers/chatRoute');
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-let port = process.env.port || 5000;
-let url = process.env.ATLAS_URI;
+let port = process.env.PORT || 5000;
+let url = process.env.ATLAS_URI || 'mongodb://localhost:27017/test';
+
+// Middleware
 app.use(cors());
-
-// version 1 
-app.use("/api/v1/users/", UserRoute);
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// routes
+// Version 1 of routers
+app.use("/api/v1/users", UserRoute);
+app.use("/api/v1/chat", chatRoute);
 
+// Default route
 app.get('/', (req, res) => {
-    res.send('welcom our chat app');
+    res.send('Welcome to our chat app');
 });
 
-app.post('/add', (req, res) => {
-    res.send('Add');
-});
-
-
-// database connection
-mongoose.connect(url).then(() => {
-    console.log(`
+// Database connection
+mongoose
+    .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log(`
  ██████╗ ██████╗ ███╗   ██╗███╗   ██╗███████╗ ██████╗████████╗
 ██╔════╝██╔═══██╗████╗  ██║████╗  ██║██╔════╝██╔════╝╚══██╔══╝
 ██║     ██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██║        ██║   
@@ -40,12 +37,13 @@ mongoose.connect(url).then(() => {
 ╚██████╗╚██████╔╝██║ ╚████║██║ ╚████║███████╗╚██████╗   ██║   
  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═╝ 
             `);
-}).catch((err) => {
-    console.log("Error: " + err);
-});
+    })
+    .catch((err) => {
+        console.error('Database connection error:', err);
+        process.exit(1); // Exit on connection error
+    });
 
-
-
-app.listen(port, '0.0.0.0' ,(req, res) => {
+// Start the server
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on port ${port}`);
 });
