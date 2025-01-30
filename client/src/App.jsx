@@ -1,26 +1,28 @@
-import { useContext } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import './App.css';
-import Login from './containers/login/Login';
-import Home from './containers/home/Home';
-import SignUp from './containers/sign_up/SignUp';
-import ChatNavbar from './containers/navBar/Navbar';
-import { UserContext, UserContextProvider } from './context/UserContext'; // ✅ Ensure named imports
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { UserContextProvider } from "./context/UserContext";
+import { ChatContextProvider } from "./context/ChatContext"; // ✅ Ensure correct import
+import Login from "./containers/login/Login";
+import Home from "./containers/home/Home";
+import SignUp from "./containers/sign_up/SignUp";
+import ChatNavbar from "./containers/navBar/Navbar";
+import Cookies from "js-cookie";
 
 function App() {
-  const { user } = useContext(UserContext) || {}; // ✅ Prevents undefined error
-
+  let data = Cookies.get("all");
+  let user = JSON.parse(data);
   return (
-    <UserContextProvider> {/* ✅ Wrap inside UserContextProvider */}
-      <BrowserRouter>
-        <ChatNavbar />
-        <Routes>
-          <Route path="/" element={user ? <Navigate to="/home" /> : <Login />} />
-          <Route path="/home" element={user ? <Home /> : <Navigate to="/" />} />
-          <Route path="/signup" element={user ? <Navigate to="/home" /> : <SignUp />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </BrowserRouter>
+    <UserContextProvider> {/* ✅ Ensure `UserContextProvider` is wrapping */}
+      <ChatContextProvider user={user}> {/* ✅ Ensure `ChatContextProvider` is wrapping */}
+        <BrowserRouter>
+          <ChatNavbar />
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </BrowserRouter>
+      </ChatContextProvider>
     </UserContextProvider>
   );
 }

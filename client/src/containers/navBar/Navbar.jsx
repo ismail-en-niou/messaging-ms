@@ -1,9 +1,20 @@
 import React, { useState } from "react";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 const ChatNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(true);
-
+   const context = useContext(UserContext);
+    if (!context) {
+      console.error("UserContext is undefined! Make sure UserContextProvider is wrapping your app.");
+      return <div>Error: Context not available</div>;
+    }
+  
+  const { logout} = context;
+    const logouthandel = () => {
+      logout();
+    };
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -28,10 +39,10 @@ const ChatNavbar = () => {
             {/* Right side (Profile, Notifications, Chat Toggle) */}
             <div className="hidden md:flex items-center space-x-4">
               <button
-                onClick={toggleChat}
+                onClick={logouthandel}
                 className="text-white bg-blue-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800"
               >
-                {isChatOpen ? "Close Chat" : "Open Chat"}
+                Logout
               </button>
               <button className="text-white hover:bg-blue-700 p-2 rounded-full focus:outline-none">
                 <span className="sr-only">Notifications</span>
@@ -51,11 +62,6 @@ const ChatNavbar = () => {
                   />
                 </svg>
               </button>
-              <img
-                src="https://via.placeholder.com/40"
-                alt="User"
-                className="h-10 w-10 rounded-full border-2 border-white"
-              />
             </div>
 
             {/* Mobile Menu Button */}
@@ -111,7 +117,7 @@ const ChatNavbar = () => {
                 onClick={toggleChat}
                 className="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800"
               >
-                {isChatOpen ? "Close Chat" : "Open Chat"}
+                Logout
               </button>
               <a
                 href="#"
@@ -130,22 +136,6 @@ const ChatNavbar = () => {
         )}
       </nav>
 
-      {/* Chat Window (Toggleable) */}
-      {isChatOpen && (
-        <div className="bg-gray-100 border-t border-gray-300 fixed bottom-0 left-0 right-0 h-64">
-          <div className="p-4">
-            <h2 className="text-lg font-bold">Chat Window</h2>
-            <div className="h-40 bg-white rounded-md shadow-inner p-2 overflow-y-auto">
-              <p className="text-sm text-gray-600">Welcome to the chat!</p>
-            </div>
-            <input
-              type="text"
-              className="mt-2 w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-              placeholder="Type a message..."
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-export const baseUrl = "https://studious-goldfish-9pwrwvp777x3qqq-4242.app.github.dev/api/v1/chat";
+export const baseUrl = "http://localhost:4242/api/v1";
 
 export const getfetch = async (baseUrl)=>{
     const response = await fetch(baseUrl);

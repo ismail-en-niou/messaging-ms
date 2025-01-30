@@ -1,9 +1,18 @@
 import { useContext, useState } from "react";
-import { userContext } from "../../context/UserContext";
+import { UserContext } from "../../context/UserContext"; // ✅ Correct import
 import { Link } from "react-router-dom";
 
 export default function Login() {
-  const { login, errorMessage } = useContext(userContext);
+  const context = useContext(UserContext);
+  console.log("Context value:", context); // ✅ Debugging log
+
+  if (!context) {
+    console.error("UserContext is undefined! Make sure UserContextProvider is wrapping your app.");
+    return <div>Error: Context not available</div>;
+  }
+
+  const { login, errorMessage } = context;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
