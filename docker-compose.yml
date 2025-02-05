@@ -1,0 +1,18 @@
+services:
+  server:
+    container_name: server_container
+    build: ./server
+    image: myserver:v1.0
+    env_file:
+      - ./server/.env
+    restart: always
+    ports:
+      - "4242:4242"
+  client:
+    container_name: client_container
+    build: ./client
+    image: myclient:v1.0
+    restart: always
+    ports:
+      - "5173:5173"
+

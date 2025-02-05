@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function Login() {
   const context = useContext(UserContext);
-  console.log("Context value:", context); // ✅ Debugging log
+  // console.log("Context value:", context); // ✅ Debugging log
 
   if (!context) {
     console.error("UserContext is undefined! Make sure UserContextProvider is wrapping your app.");

@@ -6,6 +6,7 @@ const ChatNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(true);
    const context = useContext(UserContext);
+  //  console.log(context.user);
     if (!context) {
       console.error("UserContext is undefined! Make sure UserContextProvider is wrapping your app.");
       return <div>Error: Context not available</div>;
@@ -30,7 +31,7 @@ const ChatNavbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex items-center">
+            <div className="flex items-center space-x-12">
               <a href="/" className="text-white text-xl font-bold">
                 ChatApp
               </a>
@@ -114,7 +115,7 @@ const ChatNavbar = () => {
           <div className="md:hidden bg-blue-700">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <button
-                onClick={toggleChat}
+                onClick={logouthandel}
                 className="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800"
               >
                 Logout

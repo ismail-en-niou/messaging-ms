@@ -9,7 +9,11 @@ import Cookies from "js-cookie";
 
 function App() {
   let data = Cookies.get("all");
-  let user = JSON.parse(data);
+  let user = null
+  if (data)
+  {
+   user = JSON.parse(data);
+  }
   return (
     <UserContextProvider> {/* ✅ Ensure `UserContextProvider` is wrapping */}
       <ChatContextProvider user={user}> {/* ✅ Ensure `ChatContextProvider` is wrapping */}

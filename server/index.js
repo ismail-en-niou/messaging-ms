@@ -6,10 +6,11 @@ require('dotenv').config();
 // Declaration of routers
 const UserRoute = require('./routers/userRoute');
 const chatRoute = require('./routers/chatRoute');
+const msgRoute = require('./routers/msgRoute');
 
 const app = express();
 let port = process.env.PORT || 5000;
-let url = process.env.ATLAS_URI || 'mongodb://localhost:27017/test';
+let url = process.env.ATLAS_URI;
 
 // Middleware
 app.use(cors());
@@ -19,6 +20,7 @@ app.use(express.json());
 // Version 1 of routers
 app.use("/api/v1/users", UserRoute);
 app.use("/api/v1/chat", chatRoute);
+app.use("/api/v1/messages" , msgRoute);
 
 // Default route
 app.get('/', (req, res) => {

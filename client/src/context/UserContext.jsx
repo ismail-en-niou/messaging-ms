@@ -19,7 +19,7 @@ export const UserContextProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await axios.post(
-        "http://localhost:4242/api/v1/users/login",
+        "https://studious-goldfish-9pwrwvp777x3qqq-4243.app.github.dev/api/v1/users/login",
         { email, pass: password }
       );
 

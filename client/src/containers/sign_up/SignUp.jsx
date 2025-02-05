@@ -26,7 +26,7 @@ export default function SignUp() {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:4242/api/v1/users/register', {
+      const response = await axios.post('https://studious-goldfish-9pwrwvp777x3qqq-4243.app.github.dev/api/v1/users/register', {
         username: username,
         email: email,
         password: password,

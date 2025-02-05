@@ -47,6 +47,7 @@ const findChat = async (req, res) => {
         const chat = await chatModel.findOne({
             members: { $all: [firstId, secondId] }, // Fixed $all usage
         });
+        // console.log(chat);
         res.status(200).json(chat);
     } catch (error) {
         console.error("Error finding chat:", error);

@@ -1,4 +1,4 @@
-export const baseUrl = "http://localhost:4242/api/v1";
+export const baseUrl = "https://studious-goldfish-9pwrwvp777x3qqq-4243.app.github.dev/api/v1";
 
 export const getfetch = async (baseUrl)=>{
     const response = await fetch(baseUrl);
@@ -12,3 +12,29 @@ export const getfetch = async (baseUrl)=>{
     }
     return data;
 }
+
+export const postfetch = async (baseUrl, payload) => {
+    try {
+        const response = await fetch(baseUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
+        
+        const data = await response.json();
+        console.log(data);
+        if (!response.ok) {
+            let message = "An error occurred ...";
+            if (data?.message) {
+                message = data.message;
+            }
+            return { error: true, message };
+        }
+        
+        return data;
+    } catch (error) {
+        return { error: true, message: error.message };
+    }
+};

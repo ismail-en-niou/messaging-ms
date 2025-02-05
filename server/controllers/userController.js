@@ -64,7 +64,13 @@ const findUser = async (req , res) =>{
     const userid = req.params.userId ;
     try {
         const user = await userModel.findById(userid);
-        res.status(200).json(user);
+        // console.log(user);
+        res.status(200).json({
+            email: user.email,
+            username: user.username,
+            verify: user.verifiy,
+            _id: user._id
+          });
     }catch(error){
         console.log(error);
         res.status(500).json({ msg: 'Server error' });
