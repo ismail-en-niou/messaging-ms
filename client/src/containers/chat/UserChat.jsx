@@ -1,34 +1,43 @@
-import React, { useEffect, useState } from 'react'
-import userfetch from "../../hooks/userftech"
-import { Stack, Typography, Avatar, Badge } from '@mui/material';
+import React, { useContext, useEffect, useState } from "react";
+import userfetch from "../../hooks/userftech";
+import { Stack, Typography, Avatar, Badge } from "@mui/material";
+import { ChatContext } from "../../context/ChatContext";
 
 export default function UserChat({ Chat, user }) {
-  const {recipientUser } = userfetch(Chat, user);
-  const [userschat , setUserChat ] = useState(null);
-  useEffect(()=>{
+  const { recipientUser } = userfetch(Chat, user);
+  const [userschat, setUserChat] = useState(null);
+  const { onlineUsers } = useContext(ChatContext);
+
+  useEffect(() => {
     setUserChat(recipientUser);
-  },[recipientUser])
+  }, [recipientUser]);
+  const is_online = onlineUsers?.some((usr) => usr?.userId === user?._id);
+
   return (
-    <Stack direction="row" gap={3} role="button" className='user-card align-items-center h-full justify-content-between' sx={{ width: '220%', padding: '10px',}}>
-      <div className='flex align-items-center'>
+    <Stack
+      direction="row"
+      gap={3}
+      role="button"
+      className="user-card align-items-center h-full justify-content-between"
+      sx={{ width: "220%", padding: "10px" }}
+    >
+      <div className="flex align-items-center">
         <div className="me-2">
-        <Avatar sx={{ width: 46, height: 46, marginRight: '10px' }}>{recipientUser?.username?.charAt(0)}</Avatar>
+          <Avatar sx={{ width: 46, height: 46, marginRight: "10px" }}>
+            {user?.username?.charAt(0)}
+          </Avatar>
         </div>
         <div className="text-content">
-          <Typography sx={{ fontWeight: 'bold' }}>
+          <Typography sx={{ fontWeight: "bold" }}>
             {user?.username}
           </Typography>
-          <Typography>
-            Text message
-          </Typography>
+          <Typography>Text message</Typography>
         </div>
       </div>
       <div className="d-flex flex-column align-items-end">
-        <Typography>
-          12/12/2022
-        </Typography>
-        <Badge badgeContent={4} color="primary" sx={{ marginTop: '10px' , marginLeft:'100%'}} />
-        <span className="user-online"></span>
+        <Typography>12/12/2022</Typography>
+        <Badge badgeContent={4} color="primary" sx={{ marginTop: "10px", marginLeft: "100%" }} />
+        <span className={is_online ? "user-online" : "user-offline"}></span>
       </div>
     </Stack>
   );
