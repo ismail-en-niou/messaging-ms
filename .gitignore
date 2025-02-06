@@ -1,5 +1,6 @@
 # Ignore node_modules folder inside the server directory
 server/node_modules/
+socket/node_modules/
 
 # Ignore .env file inside the server directory (for sensitive data)
 server/.env
