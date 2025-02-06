@@ -9,9 +9,11 @@ export const ChatContextProvider = ({ children, user }) => {
   const [userChatsError, setUserChatsError] = useState(null);
   const [potentialChats, setPotentialChats] = useState([]);
   const [currentChat , setCurrentChat] = useState({});
-  const [messages , setMessages] = useState(null);
+  const [messages , setMessages] = useState({});
   const [isMessageLoading , setIsMessageLoading] = useState(false);
   const [messagesError , setMessageError] = useState(null);
+  const [sendMessageError , setSendMessageError] = useState(null);
+  const [newMessage , setNewMessage] = useState(null);
   // console.log("currentChat",currentChat);
   // console.log("message", message)
   useEffect(() => {
@@ -69,8 +71,9 @@ export const ChatContextProvider = ({ children, user }) => {
     const getMessage = async () => {
         setIsMessageLoading(true);
         setMessageError(null);
-        // console.log(currentChat);
+        // console.log("current chat id",currentChat._id);
         const response = await getfetch(`${baseUrl}/messages/${currentChat?._id}`);
+        // console.log("response",response);
         if (response.error) {
           setMessageError(response);
         } else {
@@ -80,7 +83,32 @@ export const ChatContextProvider = ({ children, user }) => {
     };
 
     getMessage();
-  }, [currentChat]);
+  }, [currentChat , newMessage]);
+
+  const sendMessage = useCallback(async (textMessage , sender , currentChatId , setTextMessage) => {
+   
+    if (!textMessage) return console.log("Message cannot be empty");
+    console.log("currentChatId",currentChatId);
+    console.log("sender",sender._id);
+    console.log("textMessage",textMessage);
+
+    const resp = await postfetch(
+      `${baseUrl}/messages/`,
+      {
+        chatId: currentChatId,
+        senderId: sender._id,
+        text: textMessage,
+      }
+    );
+    console.log("resp",resp);
+    if (resp.error) {
+      setSendMessageError(resp);
+    } else {
+      setTextMessage("");
+      setMessages((prev) => (prev ? [...prev, resp] : [resp]));
+      setNewMessage(resp);
+    }
+  }, []);
 
   const updateCurentChat = useCallback((chat)=>{
     // console.log("hada chat ",chat)
@@ -110,7 +138,8 @@ export const ChatContextProvider = ({ children, user }) => {
         messages,
         isMessageLoading,
         messagesError,
-        currentChat
+        currentChat,
+        sendMessage,
       }}
     >
       {children}

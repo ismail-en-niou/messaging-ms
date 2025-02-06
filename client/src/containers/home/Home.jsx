@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ChatContext } from "../../context/ChatContext";
 import { Container, Stack } from "@mui/material";
-import Userchat from "../chat/UserChat";
+import Userchat from "../chat/userChat";
 import { UserContext } from "../../context/UserContext";
 import PotentialChats from "../chat/PotentialChat";
 import ChatBox from "../chat/ChatBox";
@@ -31,7 +31,7 @@ export default function Home() {
       {chats.length === 0 ? (
         <p>No chats available.</p>
       ) : (
-        <Stack direction="row" gap={2} className="h-full align-items-center">
+        <Stack direction="row" gap={2} className="h-full ">
           <Stack className="h-full messages-box flex-grow-0 pe-3 " gap={3}>
             {isUserChatLoding && <p>Loading chats...</p>}
             {chats.map((chat) => (
