@@ -119,5 +119,5 @@ Le projet est conçu pour être déployé sur **AWS**, **VPS** ou tout autre fou
 
 💡 **Contributeurs :** Merci de suivre les bonnes pratiques de développement et d’ouvrir une PR (Pull Request) pour toute contribution !
 
-📧 **Contact :** Pour toute question ou suggestion, contactez-nous via [ismail.enniou@example.com](mailto:ismail.enniou@example.com).
+📧 **Contact :** Pour toute question ou suggestion, contactez-nous via [ismail.enniou@gmail.com](mailto:ismail.enniou@gmail.com).
 
