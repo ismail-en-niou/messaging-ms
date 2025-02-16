@@ -5,6 +5,7 @@ import Login from "./containers/login/Login";
 import Home from "./containers/home/Home";
 import SignUp from "./containers/sign_up/SignUp";
 import ChatNavbar from "./containers/navBar/Navbar";
+import Search from "./containers/search/Search";
 import Cookies from "js-cookie";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <ChatNavbar />
           <Routes>
             <Route path="/" element={<Login />} />
+            <Route path="/Search" element={<Search />} />
             <Route path="/home" element={<Home />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="*" element={<Navigate to="/" />} />

@@ -1,28 +1,42 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 
 const ChatNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(true);
-   const context = useContext(UserContext);
-  //  console.log(context.user);
-    if (!context) {
-      console.error("UserContext is undefined! Make sure UserContextProvider is wrapping your app.");
-      return <div>Error: Context not available</div>;
-    }
-  
-  const { logout} = context;
-    const logouthandel = () => {
-      logout();
-    };
+  const location = useLocation();  // Get the current location object
+  const navigate = useNavigate();  // Hook for navigation
+  const context = useContext(UserContext);
+
+  if (!context) {
+    console.error("UserContext is undefined! Make sure UserContextProvider is wrapping your app.");
+    return <div>Error: Context not available</div>;
+  }
+
+  const { logout } = context;
+
+  const logouthandel = () => {
+    logout();
+  };
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
+  // Conditional navigation based on the current path
+  const goToSearch = () => {
+    navigate("/search");
   };
+
+  const goToChat = () => {
+    navigate("/home");
+  };
+
+  // Do not show navbar on the home route "/"
+  if (location.pathname === "/") {
+    return null;  // Hides the navbar on home route
+  }
 
   return (
     <div>
@@ -39,6 +53,24 @@ const ChatNavbar = () => {
 
             {/* Right side (Profile, Notifications, Chat Toggle) */}
             <div className="hidden md:flex items-center space-x-4">
+              <div className="flex items-center space-x-4">
+                {location.pathname === "/search" && (
+                  <button
+                    onClick={goToChat}
+                    className="text-white bg-green-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700"
+                  >
+                    Go to Chat
+                  </button>
+                )}
+                {location.pathname === "/home" && (
+                  <button
+                    onClick={goToSearch}
+                    className="text-white bg-blue-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-900"
+                  >
+                    Go to Search
+                  </button>
+                )}
+              </div>
               <button
                 onClick={logouthandel}
                 className="text-white bg-blue-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800"
@@ -63,7 +95,11 @@ const ChatNavbar = () => {
                   />
                 </svg>
               </button>
+              {/* Conditional Button for Search or Chat */}
+
             </div>
+
+
 
             {/* Mobile Menu Button */}
             <div className="md:hidden">
@@ -136,7 +172,6 @@ const ChatNavbar = () => {
           </div>
         )}
       </nav>
-
     </div>
   );
 };
