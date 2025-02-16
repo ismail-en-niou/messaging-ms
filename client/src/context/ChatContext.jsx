@@ -23,7 +23,9 @@ export const ChatContextProvider = ({ children, user }) => {
 
   // initial socket 
   useEffect(()=>{
-    const newSocket = io("https://socket.mandomati.com ");
+    const newSocket = io("https://socket.mandomati.com",{
+      transports: ["websocket"],
+    });
     setSoket(newSocket);
     return () =>{
       newSocket.disconnect();
