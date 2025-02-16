@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 
-const io = new Server(3000, {
+const io = new Server(3333, {
   cors: {
     origin: "https://studious-goldfish-9pwrwvp777x3qqq-5174.app.github.dev",
     methods: ["GET", "POST"],

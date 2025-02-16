@@ -23,7 +23,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
   // initial socket 
   useEffect(()=>{
-    const newSocket = io("https://studious-goldfish-9pwrwvp777x3qqq-3000.app.github.dev/");
+    const newSocket = io("socket.mandomati.com ", {transports: ['websocket']});
     setSoket(newSocket);
     return () =>{
       newSocket.disconnect();
