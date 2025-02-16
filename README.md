@@ -1,6 +1,7 @@
 # Chat App - README
 
 ## Introduction
+
 Chat App est une application de messagerie en temps réel permettant aux utilisateurs de communiquer instantanément via des messages. Ce projet est construit avec **React** pour le frontend et **Express.js avec Socket.io** pour le backend. L'application utilise **MongoDB** pour le stockage des données et **JWT** pour l'authentification sécurisée.
 
 ## Stack Technologique
