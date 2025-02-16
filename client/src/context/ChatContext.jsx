@@ -1,5 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import { baseUrl, getfetch, postfetch } from "../utils/services";
+import {io, Socket} from "socket.io-client"
 
 export const ChatContext = createContext();
 
@@ -14,8 +15,64 @@ export const ChatContextProvider = ({ children, user }) => {
   const [messagesError , setMessageError] = useState(null);
   const [sendMessageError , setSendMessageError] = useState(null);
   const [newMessage , setNewMessage] = useState(null);
+  const [socket , setSoket] = useState(null);
+  const [onlineUsers , setOnlineUsers] = useState(null);
   // console.log("currentChat",currentChat);
-  // console.log("message", message)
+  console.log("online Users", onlineUsers);
+
+
+  // initial socket 
+  useEffect(()=>{
+    const newSocket = io("https://studious-goldfish-9pwrwvp777x3qqq-3000.app.github.dev/");
+    setSoket(newSocket);
+    return () =>{
+      newSocket.disconnect();
+    }
+  },[user]);
+
+  useEffect(() => {
+    if (!socket || !user?._id) return;
+  
+    console.log("🔗 Adding new user:", user._id);
+    socket.emit("addNewUser", user._id);
+
+    socket.on("updateOnlineUsers", (res) => {
+      console.log("👥 Online Users:", res);
+      setOnlineUsers(res);
+    });
+  
+    return () => {
+      socket.off("updateOnlineUsers");
+    };
+  }, [socket, user?._id]);
+  
+  // send message 
+  useEffect(() => {
+    if (!socket || !user?._id || !newMessage) return;
+    console.log("📨 Sending new message:", newMessage);
+    const recipientId = currentChat.members.find((member) => member !== user?._id);
+    socket.emit("sendMessage", {...newMessage , recipientId});
+
+
+  }, [newMessage, socket, user?._id]);
+  useEffect(() => {
+    if (!socket) return;
+  
+    const handleMessage = (message) => {
+      // Ensure message belongs to the current chat before updating state
+      if (currentChat?._id === message.chatId) {
+        setMessages((prev) => [...prev, message]);
+      }
+    };
+  
+    socket.on("getMessage", handleMessage);
+  
+    return () => {
+      socket.off("getMessage", handleMessage); // Cleanup on unmount
+    };
+  }, [socket, currentChat]);
+  
+
   useEffect(() => {
     const getUsers = async () => {
       const response = await getfetch(`${baseUrl}/users`);
@@ -123,7 +180,7 @@ export const ChatContextProvider = ({ children, user }) => {
     if (response.error) {
       return console.log("Error creating chat", response);
     }
-    setUserChats((prev) => (prev ? [...prev, response] : [response]));
+    setMessages((prev) => (Array.isArray(prev) ? [...prev, resp] : [resp]));
   }, []);
 
   return (
@@ -140,6 +197,7 @@ export const ChatContextProvider = ({ children, user }) => {
         messagesError,
         currentChat,
         sendMessage,
+        onlineUsers,
       }}
     >
       {children}

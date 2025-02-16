@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ChatContext } from "../../context/ChatContext";
 import { Container, Stack } from "@mui/material";
-import Userchat from "../chat/userChat";
+import Userchat from "../chat/UserChat";
 import { UserContext } from "../../context/UserContext";
 import PotentialChats from "../chat/PotentialChat";
 import ChatBox from "../chat/ChatBox";

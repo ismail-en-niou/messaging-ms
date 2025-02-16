@@ -4,7 +4,7 @@ import { UserContext } from "../../context/UserContext"; // Import UserContext t
 
 const PotentialChats = () => {
   const { user } = useContext(UserContext); // Get the current user from UserContext
-  const { potentialChats, createChat } = useContext(ChatContext);
+  const { potentialChats, createChat , onlineUsers } = useContext(ChatContext);
 
   // console.log("Potential Chats:", potentialChats);
 
@@ -19,7 +19,10 @@ const PotentialChats = () => {
               onClick={() => createChat(user._id, u._id)}
             >
               {u.username}
-              <span className="user-online"></span>
+              <span className={
+                onlineUsers?.some((user) => user?.userId === u?._id) ?
+                "user-online" : ""
+                }></span>
             </div>
           );
         })}
