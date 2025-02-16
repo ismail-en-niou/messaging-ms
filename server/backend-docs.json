@@ -1,0 +1,26 @@
+{
+  "projectName": "server",
+  "projectDescription": "chat app is real time messaging ",
+  "techStack": {
+    "nodeVersion": "v21.6.2",
+    "expressVersion": "^4.21.2",
+    "database": "MongoDB",
+    "authMethod": "JWT",
+    "realTimeTech": "socket.io"
+  },
+  "apiEndpoints": [
+    {
+      "route": "/api/v1/users",
+      "method": "get",
+      "description": "get users",
+      "requestBody": null,
+      "responseBody": null
+    }
+  ],
+  "middleware": [],
+  "environmentVariables": [
+    ""
+  ],
+  "hosting": "aws",
+  "security": "cors"
+}
