@@ -23,7 +23,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
   // initial socket 
   useEffect(()=>{
-    const newSocket = io("socket.mandomati.com ", {transports: ['websocket']});
+    const newSocket = io("socket.mandomati.com ");
     setSoket(newSocket);
     return () =>{
       newSocket.disconnect();
@@ -180,7 +180,9 @@ export const ChatContextProvider = ({ children, user }) => {
     if (response.error) {
       return console.log("Error creating chat", response);
     }
-    setMessages((prev) => (Array.isArray(prev) ? [...prev, resp] : [resp]));
+    if (response) {
+      setUserChats((prev) => (Array.isArray(prev) ? [...prev, response] : [response]));
+    }
   }, []);
 
   return (

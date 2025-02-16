@@ -17,12 +17,15 @@ export const UserContextProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
+    console.log("Logging in...");
+    console.log("Email:", email);
+    console.log("Password" , password);
     try {
       const response = await axios.post(
-        "https://studious-goldfish-9pwrwvp777x3qqq-4243.app.github.dev/api/v1/users/login",
-        { email, pass: password }
+        "https://messagingms.mandomati.com/api/v1/users/login",
+        { email,password }
       );
-
+      console.log("Login successful:", response);
       Cookies.set("token", response.data.token, {
         expires: 1439 / 1440,
         path: "/",
