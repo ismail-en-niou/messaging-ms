@@ -30,7 +30,7 @@ export default function Home() {
         <p>No chats available.</p>
       ) : (
         <Stack direction="row" className="h-full ">
-          <Stack className="h-full pe-3 ">
+          <Stack className="h-full pe-3">
             {isUserChatLoding && <p>Loading chats...</p>}
             {chats.map((chat) => (
               <UserChatWrapper key={chat._id} chat={chat} user={user} updateCurentChat={updateCurentChat} />

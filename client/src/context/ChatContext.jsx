@@ -17,13 +17,15 @@ export const ChatContextProvider = ({ children, user }) => {
   const [newMessage , setNewMessage] = useState(null);
   const [socket , setSoket] = useState(null);
   const [onlineUsers , setOnlineUsers] = useState(null);
+  const [notifications , setNotification] = useState([]);
+  let link = "http://localhost:3333";
   // console.log("currentChat",currentChat);
-  // console.log("online Users", onlineUsers);
+  // console.log("Notifications", notifications);
 
 
   // initial socket 
   useEffect(()=>{
-    const newSocket = io("https://socket.mandomati.com",{
+    const newSocket = io(link,{
       transports: ["websocket"],
     });
     setSoket(newSocket);
@@ -57,23 +59,45 @@ export const ChatContextProvider = ({ children, user }) => {
 
 
   }, [newMessage, socket, user?._id]);
+  
+
+
   useEffect(() => {
     if (!socket) return;
   
     const handleMessage = (message) => {
-      // Ensure message belongs to the current chat before updating state
       if (currentChat?._id === message.chatId) {
         setMessages((prev) => [...prev, message]);
       }
     };
   
+    const handleNotification = (res) => {
+      const isChatOpen = currentChat?.members?.some((id) => id === res.senderId);
+  
+      if (isChatOpen)
+      {
+        setNotification((prev) => [
+          { ...res, isRead: true  },
+          ...prev,
+        ]);
+      }else
+      {
+        setNotification((prev) => [
+          res,...prev,
+        ]);
+      }
+    };
+  
     socket.on("getMessage", handleMessage);
+    socket.on("getNotification", handleNotification);
   
     return () => {
-      socket.off("getMessage", handleMessage); // Cleanup on unmount
+      socket.off("getMessage", handleMessage);
+      socket.off("getNotification", handleNotification);
     };
   }, [socket, currentChat]);
   
+
 
   useEffect(() => {
     const getUsers = async () => {
@@ -202,6 +226,7 @@ export const ChatContextProvider = ({ children, user }) => {
         currentChat,
         sendMessage,
         onlineUsers,
+        notifications,
       }}
     >
       {children}

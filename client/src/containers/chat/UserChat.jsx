@@ -27,10 +27,7 @@ export default function UserChat({ Chat, user }) {
         </Avatar>
 
         {/* Online indicator */}
-        {is_online && (
-          <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-white"></span>
-        )}
-
+        
         <div className="flex flex-col w-full">
           {/* User's name */}
           <Typography className="font-semibold text-white">{user?.username}</Typography>
@@ -54,7 +51,12 @@ export default function UserChat({ Chat, user }) {
             }}
           />
         </div>
+        <div className="relative">
+        {is_online && (
+            <span className="absolute top-[-50px] left-6 w-3 h-3 rounded-full bg-green-500 border-2 border-white"></span>
+          )}
       </div>
+        </div>
     </Stack>
   );
 }

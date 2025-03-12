@@ -1,8 +1,9 @@
 const { Server } = require("socket.io");
 
-const io = new Server(3333, {
+const PORT = 3333;
+const io = new Server(PORT, {
   cors: {
-    origin: "https://socket.mandomati.com ",
+    origin: ["https://socket.mandomati.com", "http://localhost:3333"], // Ensure localhost includes a valid port
     methods: ["GET", "POST"],
   },
 });
@@ -25,23 +26,27 @@ io.on("connection", (socket) => {
 
   // Handle sending messages
   socket.on("sendMessage", (message) => {
-    const user = onlineUsers.find(user => user.userId === message.recipientId);
+    const user = onlineUsers.find((user) => user.userId === message.recipientId);
 
     if (user) {
-        io.to(user.socketId).emit("getMessage", message);
+      io.to(user.socketId).emit("getMessage", message);
+      io.to(user.socketId).emit("getNotification", {
+        senderId: message.senderId,
+        isRead: false,
+        timestamp: new Date(),
+      });
     }
-});
-
+  });
 
   // Handle disconnection
   socket.on("disconnect", () => {
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
     console.log(`❌ User disconnected: ${socket.id}`);
-    
+
     // Send updated list to all clients
     io.emit("updateOnlineUsers", onlineUsers);
-    console.log("✅ Online Users:", onlineUsers);
+    console.log("✅ Updated Online Users:", onlineUsers);
   });
 });
 
-console.log("🚀 Socket.io server running on port 3000");
+console.log(`🚀 Socket.io server running on port ${PORT}`);
