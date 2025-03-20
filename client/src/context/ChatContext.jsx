@@ -19,9 +19,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const [onlineUsers , setOnlineUsers] = useState(null);
   const [notifications , setNotification] = useState([]);
   const [allUsers , setAllusers]  = useState([]);
-  let link = "https://socket.mandomati.com.dev/";
-  // console.log("currentChat",currentChat);
-  // console.log("Notifications", notifications);
+  let link = "wss://socket.mandomati.com";
 
 
   // initial socket 
