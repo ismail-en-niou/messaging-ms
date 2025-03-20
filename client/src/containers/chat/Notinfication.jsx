@@ -6,13 +6,11 @@ const Notification = ({ isOpen, notifications, userChats = [], allUsers = [] }) 
   const [storedNotifications, setStoredNotifications] = useState([]);
   const { markAllnotiRead } = useContext(ChatContext);
 
-  // Load notifications from localStorage on component mount
   useEffect(() => {
     const savedNotifications = JSON.parse(localStorage.getItem("notifications")) || [];
     setStoredNotifications(savedNotifications);
   }, []);
 
-  // Save notifications to localStorage whenever they change
   useEffect(() => {
     if (notifications.length > 0) {
       localStorage.setItem("notifications", JSON.stringify(notifications));
@@ -26,9 +24,9 @@ const Notification = ({ isOpen, notifications, userChats = [], allUsers = [] }) 
   const unreadCount = unreadNotifications.length;
 
   const handleMarkAllRead = () => {
-    markAllnotiRead(); // Mark all notifications as read in context
-    setStoredNotifications([]); // Clear state
-    localStorage.removeItem("notifications"); // Remove from localStorage
+    markAllnotiRead();
+    setStoredNotifications([]);
+    localStorage.removeItem("notifications");
   };
 
   const modifiedNotifications = storedNotifications.map((n) => {
@@ -54,8 +52,8 @@ const Notification = ({ isOpen, notifications, userChats = [], allUsers = [] }) 
       </div>
 
       {storedNotifications.length > 0 ? (
-        <ul className="space-y-2">
-          {modifiedNotifications?.map((notif, index) => {
+        <ul className="space-y-2 max-h-80 overflow-y-auto">
+          {modifiedNotifications.map((notif, index) => {
             const sender = allUsers.find((u) => u._id === notif.senderId);
             const chat = userChats.find((chat) => chat.members?.includes(notif.senderId));
 
@@ -72,7 +70,7 @@ const Notification = ({ isOpen, notifications, userChats = [], allUsers = [] }) 
             return (
               <li
                 key={index}
-                className={`p-2 rounded-md ${notif.isRead ? "bg-gray-200" : "bg-blue-100"}`}
+                className={`p-2 rounded-md ${notif.isRead ? "bg-gray-200" : "bg-blue-100"} hover:bg-blue-200 cursor-pointer transition-all`}
               >
                 <p className="text-sm">
                   📩 New message from <span className="font-bold">{sender ? sender.name : "Unknown Sender"}</span>

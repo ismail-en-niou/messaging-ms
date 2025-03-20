@@ -10,11 +10,11 @@ import Cookies from "js-cookie";
 
 function App() {
   let data = Cookies.get("all");
-  let user = null
-  if (data)
-  {
-   user = JSON.parse(data);
+  let user = null;
+  if (data) {
+    user = JSON.parse(data);
   }
+
   return (
     <UserContextProvider> {/* ✅ Ensure `UserContextProvider` is wrapping */}
       <ChatContextProvider user={user}> {/* ✅ Ensure `ChatContextProvider` is wrapping */}
@@ -22,7 +22,8 @@ function App() {
           <ChatNavbar />
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/Search" element={<Search />} />
+            {/* Add 'desktop-only' class to Search */}
+            <Route path="/Search" element={<Search className="desktop-only" />} />
             <Route path="/home" element={<Home />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="*" element={<Navigate to="/" />} />
@@ -34,4 +35,3 @@ function App() {
 }
 
 export default App;
-

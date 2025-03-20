@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
-import PotentialChats from '../chat/PotentialChat';
+import PotentialChats from '../chat/PotentialChat'; // Ensure that this component displays users or chats based on the search query.
 
 function Search() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
+    const query = e.target.value;
+    setSearchQuery(query);
+    
+    // Start loading while searching (simulate fetching)
+    setIsLoading(true);
+
+    // Simulate network delay to fetch potential chat results
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); // Adjust the timeout as necessary for realistic loading
   };
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
-      <div className="relative">
+      <div className="relative mb-4">
         <input
           type="text"
           placeholder="Search users..."
@@ -18,24 +28,14 @@ function Search() {
           onChange={handleSearch}
           className="w-full p-3 pl-10 pr-4 text-lg bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <svg
-          className="absolute left-3 top-3 text-gray-500"
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10 18l6-6m0 0a8 8 0 10-8 8 8 8 0 008-8z"
-          />
-        </svg>
       </div>
-      <PotentialChats searchQuery={searchQuery} />
+
+      {/* Display loading state or search results */}
+      {isLoading ? (
+        <div className="text-center text-gray-500">Searching...</div>
+      ) : (
+        <PotentialChats searchQuery={searchQuery} />
+      )}
     </div>
   );
 }

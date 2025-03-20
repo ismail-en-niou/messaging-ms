@@ -18,22 +18,28 @@ const PotentialChats = ({ searchQuery }) => {
         filteredUsers.map((u, index) => (
           <div
             key={index}
-            className="flex items-center justify-between bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer"
+            className="flex items-center justify-between bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer hover:bg-gray-100"
             onClick={() => createChat(user._id, u._id)}
           >
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white">
-                {u.username[0].toUpperCase()}
+              {/* Avatar */}
+              <div className="relative">
+                <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white">
+                  {u.username[0].toUpperCase()}
+                </div>
+                {/* Online status */}
+                <span
+                  className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ${
+                    onlineUsers?.some((onlineUser) => onlineUser?.userId === u?._id)
+                      ? "bg-green-500"
+                      : "bg-gray-400"
+                  }`}
+                ></span>
               </div>
+
+              {/* User Name */}
               <div className="font-semibold text-lg">{u.username}</div>
             </div>
-            <span
-              className={`w-2.5 h-2.5 rounded-full ${
-                onlineUsers?.some((onlineUser) => onlineUser?.userId === u?._id)
-                  ? "bg-green-500"
-                  : "bg-gray-400"
-              }`}
-            ></span>
           </div>
         ))
       )}

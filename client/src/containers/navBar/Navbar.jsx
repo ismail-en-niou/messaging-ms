@@ -9,8 +9,8 @@ const ChatNavbar = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const context = useContext(UserContext);
   const { notifications, userChats, allUsers } = useContext(ChatContext);
+  const { user, logout } = useContext(UserContext);
   const [notti, setNotti] = useState([]);
 
   // Load notifications from localStorage on component mount
@@ -27,37 +27,18 @@ const ChatNavbar = () => {
     }
   }, [notifications]);
 
-  const { user } = useContext(UserContext);
-  if (!context) {
-    console.error("UserContext is undefined! Make sure UserContextProvider is wrapping your app.");
-    return <div>Error: Context not available</div>;
-  }
-
-  const { logout } = context;
-
   const logouthandel = () => {
-    logout();
+    if (window.confirm("Are you sure you want to log out?")) {
+      logout();
+    }
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleNotifications = () => setIsNotificationOpen(!isNotificationOpen);
+  const goToSearch = () => navigate("/search");
+  const goToChat = () => navigate("/home");
 
-  const toggleNotifications = () => {
-    setIsNotificationOpen(!isNotificationOpen);
-  };
-
-  const goToSearch = () => {
-    navigate("/search");
-  };
-
-  const goToChat = () => {
-    navigate("/home");
-  };
-
-  if (location.pathname === "/") {
-    return null;
-  }
+  if (location.pathname === "/") return null;
 
   return (
     <div>
@@ -70,6 +51,7 @@ const ChatNavbar = () => {
               </a>
             </div>
 
+            {/* Desktop Navigation Items */}
             <div className="hidden md:flex items-center space-x-4">
               {location.pathname === "/search" && (
                 <button
@@ -95,10 +77,12 @@ const ChatNavbar = () => {
                 Logout
               </button>
 
+              {/* Notification Icon for Desktop */}
               <div className="relative">
-                <button 
+                <button
                   onClick={toggleNotifications}
-                  className="text-white hover:bg-blue-700 p-2 rounded-full focus:outline-none">
+                  className="text-white hover:bg-blue-700 p-2 rounded-full focus:outline-none"
+                >
                   <span className="sr-only">Notifications</span>
                   <svg
                     className="h-6 w-6"
@@ -121,24 +105,47 @@ const ChatNavbar = () => {
                     </span>
                   )}
                 </button>
-
-                {/* Notification Dropdown */}
                 {isNotificationOpen && (
                   <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg z-10">
-                    <Notification 
+                    <Notification
                       user={user}
-                      isOpen={isNotificationOpen} 
-                      notifications={notti} 
-                      userChats={userChats} 
-                      allUsers={allUsers} 
+                      isOpen={isNotificationOpen}
+                      notifications={notti}
+                      userChats={userChats}
+                      allUsers={allUsers}
                     />
                   </div>
                 )}
               </div>
             </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center">
+              <button
+                onClick={toggleMenu}
+                className="text-white p-2 rounded-md focus:outline-none"
+              >
+                <svg
+                  className="h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
+        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-blue-700">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">

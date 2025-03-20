@@ -10,33 +10,31 @@ const ChatBox = () => {
     useContext(ChatContext);
   const { recipientUser } = useFetchRecipient(currentChat, user);
   const [textMessage, setTextMessage] = useState("");
-  
-  // Refs for scrolling and input focus
+
   const inputRef = useRef(null);
   const messagesEndRef = useRef(null);
 
-  // Function to scroll to the bottom of messages
+  // Scroll to the bottom of the messages when they are updated
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Scroll to bottom whenever messages update
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // Check if recipient is online
+  // Check if the recipient is online
   const is_online = onlineUsers?.some((usr) => usr?.userId === recipientUser?._id);
 
-  // Function to handle sending messages
+  // Handle sending a message
   const handleSendMessage = () => {
     if (textMessage.trim() === "") return;
     sendMessage(textMessage, user, currentChat._id, setTextMessage);
-    setTextMessage(""); // Reset input
-    setTimeout(scrollToBottom, 100); // Ensure smooth scrolling
+    setTextMessage(""); // Reset input field
+    setTimeout(scrollToBottom, 100); // Ensure smooth scroll after sending a message
   };
 
-  // Handle Enter key press to send message
+  // Handle "Enter" key to send message
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -44,12 +42,12 @@ const ChatBox = () => {
     }
   };
 
-  // Auto-focus on input when chat is opened
+  // Focus input when chat is selected
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
   }, [currentChat]);
 
-  // Show a placeholder if no chat is selected
+  // If no recipient, show placeholder
   if (!recipientUser) {
     return (
       <div className="flex items-center justify-center h-full text-gray-400">
@@ -58,7 +56,7 @@ const ChatBox = () => {
     );
   }
 
-  // Show loading message while fetching chat data
+  // Show loading message while fetching data
   if (isMessageLoading) {
     return (
       <div className="flex items-center justify-center h-full text-gray-400">
@@ -71,7 +69,17 @@ const ChatBox = () => {
     <div className="flex flex-col h-[90vh] w-full bg-gray-100 dark:bg-gray-900">
       {/* Chat Header */}
       <div className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 shadow-md">
-        <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+        <div className="relative">
+          <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-white">
+            <span className="text-xl text-white">
+              {recipientUser.username?.charAt(0).toUpperCase()}
+            </span>
+          </div>
+          {/* Online indicator */}
+          {is_online && (
+            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-white"></span>
+          )}
+        </div>
         <div>
           <p className="font-semibold text-gray-800 dark:text-white">
             {recipientUser.username}
@@ -109,7 +117,6 @@ const ChatBox = () => {
         ) : (
           <p className="text-center text-gray-400">No messages to display</p>
         )}
-        {/* Invisible div for auto-scrolling */}
         <div ref={messagesEndRef} />
       </div>
 
@@ -123,11 +130,11 @@ const ChatBox = () => {
           value={textMessage}
           onChange={(e) => setTextMessage(e.target.value)}
           onKeyDown={handleKeyDown} // Detect "Enter" key
-          className="flex-1 p-2 border rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none"
+          className="flex-1 p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
         />
         <button
           onClick={handleSendMessage}
-          className="p-2 bg-blue-500 text-white rounded-full"
+          className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all"
         >
           ➤
         </button>
