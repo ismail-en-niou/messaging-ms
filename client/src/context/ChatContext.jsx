@@ -18,7 +18,8 @@ export const ChatContextProvider = ({ children, user }) => {
   const [socket , setSoket] = useState(null);
   const [onlineUsers , setOnlineUsers] = useState(null);
   const [notifications , setNotification] = useState([]);
-  let link = "http://localhost:3333";
+  const [allUsers , setAllusers]  = useState([]);
+  let link = "https://studious-goldfish-9pwrwvp777x3qqq-3333.app.github.dev/";
   // console.log("currentChat",currentChat);
   // console.log("Notifications", notifications);
 
@@ -128,6 +129,16 @@ export const ChatContextProvider = ({ children, user }) => {
 
   // get chats 
 
+
+  useEffect(() => {
+    const getAllUsers = async () => {
+      const response = await getfetch(`${baseUrl}/users`);
+      setAllusers(response);
+    };
+    getAllUsers();
+  }, []);
+
+
   useEffect(() => {
     const getUserChats = async () => {
       if (user?._id) {
@@ -210,7 +221,12 @@ export const ChatContextProvider = ({ children, user }) => {
       setUserChats((prev) => (Array.isArray(prev) ? [...prev, response] : [response]));
     }
   }, []);
-
+  const markAllnotiRead =(notifications)=>{
+    const mnotificatios = notifications.map(n =>{
+      return {...n,isRead : true}
+    });
+    setNotification(mnotificatios)
+  }
   return (
     <ChatContext.Provider
       value={{
@@ -227,6 +243,8 @@ export const ChatContextProvider = ({ children, user }) => {
         sendMessage,
         onlineUsers,
         notifications,
+        allUsers,
+        markAllnotiRead
       }}
     >
       {children}

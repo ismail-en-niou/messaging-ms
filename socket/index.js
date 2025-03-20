@@ -3,7 +3,7 @@ const { Server } = require("socket.io");
 const PORT = 3333;
 const io = new Server(PORT, {
   cors: {
-    origin: ["https://socket.mandomati.com", "http://localhost:3333"], // Ensure localhost includes a valid port
+    origin: ["https://socket.mandomati.com", "http://localhost:3333" , "https://studious-goldfish-9pwrwvp777x3qqq-3333.app.github.dev/"], // Ensure localhost includes a valid port
     methods: ["GET", "POST"],
   },
 });

@@ -8,6 +8,7 @@ export const UserContext = createContext();
 export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [allUsers , setAllUsers] = useState({});
 
   useEffect(() => {
     const storedUser = Cookies.get("all");
