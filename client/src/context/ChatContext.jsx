@@ -10,7 +10,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const [userChatsError, setUserChatsError] = useState(null);
   const [potentialChats, setPotentialChats] = useState([]);
   const [currentChat , setCurrentChat] = useState({});
-  const [messages , setMessages] = useState({});
+  const [messages , setMessages] = useState([]);
   const [isMessageLoading , setIsMessageLoading] = useState(false);
   const [messagesError , setMessageError] = useState(null);
   const [sendMessageError , setSendMessageError] = useState(null);
@@ -197,7 +197,7 @@ export const ChatContextProvider = ({ children, user }) => {
       setSendMessageError(resp);
     } else {
       setTextMessage("");
-      setMessages((prev) => (prev ? [...prev, resp] : [resp]));
+      setMessages((prev) => (Array.isArray(prev) ? [...prev, resp] : [resp]));
       setNewMessage(resp);
     }
   }, []);

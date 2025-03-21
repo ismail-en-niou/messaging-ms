@@ -6,6 +6,8 @@ const Notification = ({ isOpen, notifications, userChats = [], allUsers = [] }) 
   const [storedNotifications, setStoredNotifications] = useState([]);
   const { markAllnotiRead } = useContext(ChatContext);
 
+  console.log(notifications);
+
   useEffect(() => {
     const savedNotifications = JSON.parse(localStorage.getItem("notifications")) || [];
     setStoredNotifications(savedNotifications);
