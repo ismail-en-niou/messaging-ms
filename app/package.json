@@ -1,0 +1,33 @@
+{
+  "name": "messaging",
+  "version": "2.0.0",
+  "main": "main.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "electron .",
+    "build": "cd ../client && npm install && npm run build && cd ../app && if exist builder rmdir /s /q builder && if exist dist rmdir /s /q dist && mkdir builder && xcopy /E /I ../client/dist ./builder && cross-env electron-builder",
+    "package": "electron-packager . messaging --platform=win32 --arch=x64 --out=dist/"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "electron": "^35.0.3",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.yourname.messaging",
+    "productName": "Messaging App",
+    "files": [
+      "main.js",
+      "builder/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  }
+}

@@ -19,7 +19,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const [onlineUsers , setOnlineUsers] = useState(null);
   const [notifications , setNotification] = useState([]);
   const [allUsers , setAllusers]  = useState([]);
-  let link = "wss://socket.mandomati.com";
+  let link = "http://socket.mandomati.com/";
 
 
   // initial socket 
@@ -72,20 +72,14 @@ export const ChatContextProvider = ({ children, user }) => {
   
     const handleNotification = (res) => {
       const isChatOpen = currentChat?.members?.some((id) => id === res.senderId);
-  
-      if (isChatOpen)
-      {
-        setNotification((prev) => [
-          { ...res, isRead: true  },
-          ...prev,
-        ]);
-      }else
-      {
-        setNotification((prev) => [
-          res,...prev,
-        ]);
-      }
+      setNotification((prev) => {
+        // If the chat is open, mark notification as read
+        return isChatOpen
+          ? [{ ...res, isRead: true }, ...prev]
+          : [{ ...res, isRead: false }, ...prev];
+      });
     };
+    
   
     socket.on("getMessage", handleMessage);
     socket.on("getNotification", handleNotification);
@@ -180,9 +174,6 @@ export const ChatContextProvider = ({ children, user }) => {
   const sendMessage = useCallback(async (textMessage , sender , currentChatId , setTextMessage) => {
    
     if (!textMessage) return console.log("Message cannot be empty");
-    console.log("currentChatId",currentChatId);
-    console.log("sender",sender._id);
-    console.log("textMessage",textMessage);
 
     const resp = await postfetch(
       `${baseUrl}/messages/`,
@@ -219,12 +210,27 @@ export const ChatContextProvider = ({ children, user }) => {
       setUserChats((prev) => (Array.isArray(prev) ? [...prev, response] : [response]));
     }
   }, []);
-  const markAllnotiRead =(notifications)=>{
-    const mnotificatios = notifications.map(n =>{
-      return {...n,isRead : true}
+
+  const markAllNotiRead = () => {
+    // Emit an event to the server to update notifications as read for the user
+    if (socket && user?._id) {
+      socket.emit("markAllNotificationsRead", user._id);  // Send user id to mark all notifications as read
+    }
+  
+    // Update state to mark all notifications as read
+    setNotification((prevNotifications) => {
+      const updatedNotifications = prevNotifications.map((n) => ({
+        ...n,
+        isRead: true,
+      }));
+  
+      // Optionally save it in localStorage or your database
+      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+  
+      return updatedNotifications;
     });
-    setNotification(mnotificatios)
-  }
+  };
+  
   return (
     <ChatContext.Provider
       value={{
@@ -242,7 +248,7 @@ export const ChatContextProvider = ({ children, user }) => {
         onlineUsers,
         notifications,
         allUsers,
-        markAllnotiRead
+        markAllNotiRead
       }}
     >
       {children}

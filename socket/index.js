@@ -37,6 +37,19 @@ io.on("connection", (socket) => {
       });
     }
   });
+  // Handling the 'markAsRead' event
+  socket.on("markAsRead", (notificationId) => {
+  // Find the notification by ID and set isRead to true
+  const notification = onlineUsers.find((user) => user.socketId === socket.id);
+
+  if (notification) {
+    // Send back the updated notification to the client
+    io.to(socket.id).emit("notificationUpdated", {
+      notificationId,
+      isRead: true,
+    });
+  }
+  });
 
   // Handle disconnection
   socket.on("disconnect", () => {

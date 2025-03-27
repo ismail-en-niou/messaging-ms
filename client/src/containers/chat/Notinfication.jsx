@@ -6,8 +6,6 @@ const Notification = ({ isOpen, notifications, userChats = [], allUsers = [] }) 
   const [storedNotifications, setStoredNotifications] = useState([]);
   const { markAllnotiRead } = useContext(ChatContext);
 
-  console.log(notifications);
-
   useEffect(() => {
     const savedNotifications = JSON.parse(localStorage.getItem("notifications")) || [];
     setStoredNotifications(savedNotifications);
@@ -15,10 +13,11 @@ const Notification = ({ isOpen, notifications, userChats = [], allUsers = [] }) 
 
   useEffect(() => {
     if (notifications.length > 0) {
-      localStorage.setItem("notifications", JSON.stringify(notifications));
-      setStoredNotifications(notifications);
+        const unreadNotifications = notifications.filter(n => !n.isRead);
+        localStorage.setItem("notifications", JSON.stringify(unreadNotifications));
+        setStoredNotifications(unreadNotifications);
     }
-  }, [notifications]);
+}, [notifications]);
 
   if (!isOpen) return null;
 
@@ -27,17 +26,39 @@ const Notification = ({ isOpen, notifications, userChats = [], allUsers = [] }) 
 
   const handleMarkAllRead = () => {
     markAllnotiRead();
-    setStoredNotifications([]);
-    localStorage.removeItem("notifications");
+    setStoredNotifications([]); // Clear state notifications
+    localStorage.removeItem("notifications"); // Clear localStorage
   };
 
-  const modifiedNotifications = storedNotifications.map((n) => {
-    const sender = allUsers.find((u) => u._id === n.senderId);
+  // Optimize by combining sender lookup and chat membership
+  const modifiedNotifications = storedNotifications.map((notif) => {
+    const sender = allUsers.find((u) => u._id === notif.senderId);
+    const chat = userChats.find((chat) => chat.members?.includes(notif.senderId));
+
+    // Get names of chat members excluding the sender
+    const chatMemberNames = chat
+      ? chat.members
+          .filter((id) => id !== sender?._id)
+          .map((id) => {
+            const member = allUsers.find((u) => u._id === id);
+            return member ? member.username : "Unknown Member";
+          })
+          .join(", ")
+      : "No chat found";
+
     return {
-      ...n,
-      senderName: sender ? sender.name : "Unknown Sender",
+      ...notif,
+      senderName: sender ? sender.username : "Unknown Sender",
+      chatMemberNames,
+      chat,
     };
   });
+  console.log(modifiedNotifications);
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp) return "Unknown time";
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+  };
 
   return (
     <div className="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg p-4">
@@ -55,37 +76,22 @@ const Notification = ({ isOpen, notifications, userChats = [], allUsers = [] }) 
 
       {storedNotifications.length > 0 ? (
         <ul className="space-y-2 max-h-80 overflow-y-auto">
-          {modifiedNotifications.map((notif, index) => {
-            const sender = allUsers.find((u) => u._id === notif.senderId);
-            const chat = userChats.find((chat) => chat.members?.includes(notif.senderId));
-
-            const chatMemberNames = chat
-              ? chat.members
-                  .filter((id) => id !== sender?._id)
-                  .map((id) => {
-                    const member = allUsers.find((u) => u._id === id);
-                    return member ? member.name : "Unknown Member";
-                  })
-                  .join(", ")
-              : "No chat found";
-
-            return (
-              <li
-                key={index}
-                className={`p-2 rounded-md ${notif.isRead ? "bg-gray-200" : "bg-blue-100"} hover:bg-blue-200 cursor-pointer transition-all`}
-              >
-                <p className="text-sm">
-                  📩 New message from <span className="font-bold">{sender ? sender.name : "Unknown Sender"}</span>
-                </p>
-                <p className="text-xs text-gray-500">
-                  Chat: {chat ? `Chat with ${chatMemberNames}` : "No chat found"}
-                </p>
-                <span className="text-xs text-gray-500">
-                  {notif.timestamp ? new Date(notif.timestamp).toLocaleString() : "Unknown time"}
-                </span>
-              </li>
-            );
-          })}
+          {modifiedNotifications.map((notif, index) => (
+            <li
+              key={index}
+              className={`p-2 rounded-md ${notif.isRead ? "bg-gray-200" : "bg-blue-100"} hover:bg-blue-200 cursor-pointer transition-all`}
+            >
+              <p className="text-sm">
+                📩 New message from <span className="font-bold">{notif.senderName}</span>
+              </p>
+              <p className="text-xs text-gray-500">
+                Chat: {notif.chat ? `Chat with ${notif.chatMemberNames}` : "No chat found"}
+              </p>
+              <span className="text-xs text-gray-500">
+                {formatTimestamp(notif.timestamp)}
+              </span>
+            </li>
+          ))}
         </ul>
       ) : (
         <p className="text-gray-500">No new notifications</p>
