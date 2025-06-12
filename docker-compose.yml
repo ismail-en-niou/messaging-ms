@@ -1,4 +1,11 @@
 services:
+  caddy:
+    container_name: caddy
+    build: ./caddy
+    image: mycaddy:latest
+    networks:
+      - mynet
+    restart: always
   server:
     container_name: server_container
     build: ./server
@@ -6,6 +13,8 @@ services:
     env_file:
       - ./server/.env
     restart: always
+    networks:
+      - mynet
     ports:
       - "4242:4242"
   client:
@@ -13,6 +22,11 @@ services:
     build: ./client
     image: myclient:v1.0
     restart: always
+    networks:
+      - mynet
     ports:
       - "5173:5173"
 
+networks:
+  mynet:
+    driver: bridge

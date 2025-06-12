@@ -1,0 +1,8 @@
+sockett.mandomati.com {
+    reverse_proxy server:4242
+}
+
+clients.mandomati.com {
+    reverse_proxy client:5173
+}
+
