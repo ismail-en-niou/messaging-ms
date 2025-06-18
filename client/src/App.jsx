@@ -145,13 +145,13 @@ const usePageTitle = () => {
   
   useEffect(() => {
     const titles = {
-      '/': 'WhatsApp Web',
-      '/home': 'WhatsApp Web',
-      '/signup': 'Sign Up - WhatsApp Web',
-      '/search': 'Search - WhatsApp Web'
+      '/': 'Messaging App',
+      '/home': 'Messaging App',
+      '/signup': 'Sign Up - Messaging App',
+      '/search': 'Search - Messaging App'
     };
     
-    document.title = titles[location.pathname] || 'WhatsApp Web';
+    document.title = titles[location.pathname] || 'Messaging App';
   }, [location.pathname]);
 };
 
@@ -242,7 +242,7 @@ function App() {
             Failed to Load App
           </h2>
           <p className="text-[#667781] dark:text-[#8696a0] text-sm mb-6">
-            There was a problem loading WhatsApp Web. Please check your connection and try again.
+            There was a problem loading Messaging App. Please check your connection and try again.
           </p>
           <button
             onClick={() => window.location.reload()}

@@ -118,7 +118,7 @@ const ChatNavbar = () => {
             <div className="flex items-center space-x-3">
               {/* WhatsApp Logo */}
               <h1 className="text-xl font-medium text-[#111b21] dark:text-[#e9edef]">
-                Messagin App
+                Messaging App
               </h1>
             </div>
           </div>

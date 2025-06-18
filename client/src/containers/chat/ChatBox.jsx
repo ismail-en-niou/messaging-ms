@@ -106,7 +106,7 @@ const ChatBox = () => {
             </svg>
           </div>
           <h3 className="text-[#41525d] dark:text-[#8696a0] text-2xl font-light mb-2">
-            WhatsApp Web
+            Messaging App
           </h3>
           <p className="text-[#667781] dark:text-[#8696a0] text-sm max-w-md">
             Send and receive messages without keeping your phone online.
