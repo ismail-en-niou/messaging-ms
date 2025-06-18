@@ -24,7 +24,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
   // initial socket 
   useEffect(()=>{
-  const newSocket = io("https://socket.mandomati.com/", {
+  const newSocket = io("wss://socket.mandomati.com/", {
     transports: ["websocket"],
     secure: true, // Force secure connection
     rejectUnauthorized: false // Only if using self-signed certificates
