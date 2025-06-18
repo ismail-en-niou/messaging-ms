@@ -19,19 +19,21 @@ export const ChatContextProvider = ({ children, user }) => {
   const [onlineUsers , setOnlineUsers] = useState(null);
   const [notifications , setNotification] = useState([]);
   const [allUsers , setAllusers]  = useState([]);
-  let link = "http://socket.mandomati.com/";
+
 
 
   // initial socket 
   useEffect(()=>{
-    const newSocket = io(link,{
-      transports: ["websocket"],
-    });
-    setSoket(newSocket);
-    return () =>{
-      newSocket.disconnect();
-    }
-  },[user]);
+  const newSocket = io("https://socket.mandomati.com/", {
+    transports: ["websocket"],
+    secure: true, // Force secure connection
+    rejectUnauthorized: false // Only if using self-signed certificates
+  });
+  setSoket(newSocket);
+  return () =>{
+    newSocket.disconnect();
+  }
+},[user]);
 
   useEffect(() => {
     if (!socket || !user?._id) return;
